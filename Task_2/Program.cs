@@ -60,21 +60,23 @@ namespace Task_2
             fs.Close();
         }
 
-        public static double Load(string fileName)
+        public static double[] Load(string fileName, out double min)
         {
             FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             BinaryReader bw = new BinaryReader(fs);
-            double min = double.MaxValue;
+            min = double.MaxValue;
             double d;
+            double[] arr = new double[fs.Length / sizeof(double)];
             for (int i = 0; i < fs.Length / sizeof(double); i++)
             {
                 // Считываем значение и переходим к следующему
                 d = bw.ReadDouble();
                 if (d < min) min = d;
+                arr[i] = d;
             }
             bw.Close();
             fs.Close();
-            return min;
+            return arr;
         }
 
         static void Main(string[] args)
@@ -110,7 +112,9 @@ namespace Task_2
             Int32.TryParse(Console.ReadLine(), out max);
 
             SaveFunc(delegates[numb-1],"data.bin", min, max, 0.5);
-            Console.WriteLine($"Минимум функции: {Load("data.bin")}");
+            double minF = 0;
+            Load("data.bin", out minF);
+            Console.WriteLine($"Минимум функции: {minF}");
             Console.ReadKey();
         }
     }
