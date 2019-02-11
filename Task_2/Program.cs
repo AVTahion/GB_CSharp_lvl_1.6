@@ -31,6 +31,21 @@ namespace Task_2
             return x * x - 50 * x + 10;
         }
 
+        public static double FSquare(double x)
+        {
+            return x * x;
+        }
+
+        public static double FSin(double x)
+        {
+            return x * Math.Sin(x);
+        }
+
+        public static double FCos(double x)
+        {
+            return Math.Cos(x);
+        }
+
         public static void SaveFunc(Function F, string fileName, double a, double b, double h)
         {
             FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
@@ -64,8 +79,38 @@ namespace Task_2
 
         static void Main(string[] args)
         {
-            SaveFunc(new Function(Fun),"data.bin", -100, 100, 0.5);
-            Console.WriteLine(Load("data.bin"));
+            Console.WriteLine("Выберите функцию для расчета минимума");
+            Console.WriteLine("1) x * x - 50 * x + 10");
+            Console.WriteLine("2) x * x");
+            Console.WriteLine("3) x * Sin x");
+            Console.WriteLine("4) Cos x");
+
+            Function[] delegates = new Function[4];
+            delegates[0] = Fun;
+            delegates[1] = FSquare;
+            delegates[2] = FSin;
+            delegates[3] = FCos;
+
+            int numb = 0;
+            bool x;
+            do
+            {
+                Console.WriteLine("Введите номер функции:");
+                x = Int32.TryParse(Console.ReadLine(), out numb);
+            }
+            while (!(x && numb >= 1 && numb <= 4));
+
+            int min = 0;
+            int max = 0;
+
+            Console.WriteLine("Введите границы отрезка нахождения минимума");
+            Console.Write("От: ");
+            Int32.TryParse(Console.ReadLine(), out min);
+            Console.Write("До: ");
+            Int32.TryParse(Console.ReadLine(), out max);
+
+            SaveFunc(delegates[numb-1],"data.bin", min, max, 0.5);
+            Console.WriteLine($"Минимум функции: {Load("data.bin")}");
             Console.ReadKey();
         }
     }
